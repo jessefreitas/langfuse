@@ -110,14 +110,17 @@ def main() -> int:
         )
 
         # Make /opt/langfuse readable by deploy (but not world-readable).
-        # This is required because docker compose reads /opt/langfuse/.env.
+        # This is required because docker compose reads /opt/langfuse/.env and
+        # GitHub Actions uses scp to overwrite docker-compose.yml and Caddyfile.
         ssh.run(
             "set -euo pipefail; "
             "if [ -d /opt/langfuse ]; then "
-            f"chown -R root:{deploy_user} /opt/langfuse; "
+            f"chown -R {deploy_user}:{deploy_user} /opt/langfuse; "
+            # Keep secrets group-readable by deploy, but prefer root ownership.
+            f"chown root:{deploy_user} /opt/langfuse/.env 2>/dev/null || true; "
             "chmod 0750 /opt/langfuse; "
-            f"chmod 0640 /opt/langfuse/.env || true; "
-            "chmod 0644 /opt/langfuse/docker-compose.yml /opt/langfuse/Caddyfile || true; "
+            f"chmod 0640 /opt/langfuse/.env 2>/dev/null || true; "
+            "chmod 0644 /opt/langfuse/docker-compose.yml /opt/langfuse/Caddyfile 2>/dev/null || true; "
             "fi"
         )
 
@@ -127,4 +130,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
