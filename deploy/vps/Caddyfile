@@ -1,0 +1,19 @@
+{
+  # Set to your email for Let's Encrypt notifications (optional).
+  # email you@example.com
+}
+
+# Langfuse Web
+langfuse.omniforge.com.br {
+  encode zstd gzip
+  reverse_proxy langfuse-web:3000
+}
+
+#
+# Optional: expose an S3-compatible endpoint publicly for browser uploads
+# (only needed if you use MinIO for media and want signed upload URLs).
+#
+# s3.langfuse.omniforge.com.br {
+#   encode zstd gzip
+#   reverse_proxy minio:9000
+# }

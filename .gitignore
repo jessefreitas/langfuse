@@ -81,3 +81,10 @@ web/test-results/*
 
 # Refactoring planning files (local only)
 **/.refactor/
+
+# Python (local scripts)
+__pycache__/
+*.pyc
+
+# Deploy secrets/keys (local only)
+deploy/vps/keys/
